@@ -1,5 +1,5 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 70px;
     padding-bottom: 20px;
 }
 
@@ -16,9 +16,46 @@
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+
+.margin-top-10 {
+    margin-top:10px;
+}
+
+p.logo_w3l_agile_caption {
+    text-transform: uppercase;
+    letter-spacing: 5.7px;
+    font-size: 11px;
+    color: #c79f07;
+    text-shadow: 0px 1px 3px #454a47;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+}
+
+
+.navbar-custom {
+    min-height: 70px !important;
+}
+
+.navbar-collapse-custom {
+
+}
+    .navbar-collapse-custom .nav.navbar-nav > li > a {
+        line-height: 40px !important;
+    }
+
+.w3_navigation {
+    background: #0f2453;
+}
+.w3_navigation > .navbar-custom >.navbar-collapse-custom a{
+    
+}
+    .w3_navigation.navbar-inverse .navbar-nav > li > a {
+        color: white !important;
+    }
+.navbar-brand {
+    float: left;
+    height: 80px;
+    padding: 15px 15px;
+    font-size: 18px;
+    line-height: 20px;
 }

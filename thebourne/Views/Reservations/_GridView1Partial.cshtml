@@ -1,0 +1,71 @@
+@using System.Web.UI.WebControls
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "ReservationGridView";
+        settings.Width = Unit.Percentage(100);
+        settings.CallbackRouteValues = new { Controller = "Reservations", Action = "GridView1Partial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Reservations", Action = "GridView1PartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Reservations", Action = "GridView1PartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Reservations", Action = "GridView1PartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButtonInHeader = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.CommandButtonInitialize = (s, e) =>
+        {
+            if (e.ButtonType == ColumnCommandButtonType.New)
+            {
+                e.Text = "New Walk In";
+            }
+        };
+
+        settings.KeyFieldName = "Id";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+        settings.Columns.Add("AspNetUsers.FullName").Caption = "Customer Name";
+        settings.Columns.Add("Seats.TableName").Caption = "Seat Name/No.";
+        settings.Columns.Add(col =>
+        {
+            col.FieldName = "ReservationDate";
+            col.ColumnType = MVCxGridViewColumnType.DateEdit;
+            var dt = col.PropertiesEdit as DateEditProperties;
+            dt.TimeSectionProperties.Visible = true;
+            dt.DisplayFormatString = @"ddd,MM-dd-yyyy";
+        });
+        settings.Columns.Add("isCancel");
+        settings.Columns.Add(col =>
+        {
+            col.FieldName = "AmountPaid";
+            col.PropertiesEdit.DisplayFormatString = "$#,#.#";
+        });
+        settings.Columns.Add("OrNumber");
+        settings.Columns.Add("TransactionId").Caption="Paypal Trans. Id";
+        settings.Columns.Add("UsersReservedBy.FullName").Caption = "Reserved By";
+
+        settings.SetEditFormTemplateContent(col =>
+        {
+            Html.RenderAction("AddEditReservationPartial", new {reservationId = col.KeyValue});
+
+        });
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

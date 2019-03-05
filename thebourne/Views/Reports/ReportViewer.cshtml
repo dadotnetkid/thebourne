@@ -1,0 +1,29 @@
+﻿@model ReceiptReport
+@{
+    ViewBag.Title = "";
+}
+
+
+@{
+    Html.DevExpress().PopupControl(settings =>
+    {
+        settings.Name = "PopupControl";
+        settings.AllowResize = true;
+        settings.ShowHeader = true;
+        settings.ShowOnPageLoad = false;
+        settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.CloseButton;
+        settings.CloseOnEscape = false;
+        settings.Modal = true;
+        settings.HeaderText = "Report Viewer";
+        settings.PopupHorizontalAlign = PopupHorizontalAlign.WindowCenter;
+        settings.CallbackRouteValues = new { Controller = "Reports", Action = "ReportViewer" };
+        settings.ClientSideEvents.EndCallback = "function(s,e){s.Show()}";
+        settings.SetContent(() =>
+        {
+            if (Model != null)
+                Html.RenderPartial("ReportViewerContent", Model);
+        });
+    }).GetHtml();
+
+}

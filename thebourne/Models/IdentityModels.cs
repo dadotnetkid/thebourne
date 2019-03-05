@@ -16,6 +16,10 @@ namespace thebourne.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        public string LastName { get; set; }
+        public string FirstName { get; set; }
+
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

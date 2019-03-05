@@ -1,0 +1,17 @@
+﻿
+
+@Html.DevExpress().PopupControl(settings => {
+    settings.Name = "PopupControlReserve";
+    settings.AllowResize = true;
+    settings.ShowHeader = true;
+    settings.ShowOnPageLoad = false;
+    settings.AllowDragging = true;
+        settings.CloseAction = CloseAction.OuterMouseClick;
+    settings.CloseOnEscape = false;
+    settings.Modal = true;
+
+    settings.SetContent(() =>
+    {
+        ViewContext.Writer.Write("Popup control content");
+    });
+}).GetHtml()

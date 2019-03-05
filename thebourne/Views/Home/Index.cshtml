@@ -1,31 +1,90 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    var dt = (Convert.ToDateTime(ViewBag.dateofReservation));
+    ViewBag.Title = $"Available Seats on ({dt.ToString("MM/dd/yy")})";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+@using System.Web.UI.WebControls
+@using thebourne.Helpers
+@model IQueryable<thebourne.Models.Seats>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+
+
+@using (Html.BeginForm("index", "home", FormMethod.Post))
+{
+
+    <div class="panel panel-primary">
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-lg-4">
+                    @{
+                        Html.DevExpress().DateEdit(settings =>
+                        {
+                            settings.Name = "dateofReservation";
+                            settings.Properties.Caption = "Date of Reservation";
+                            settings.Width = Unit.Percentage(100);
+                        }).Bind(ViewBag.dateofReservation ?? DateTime.Now).GetHtml();
+                    }
+                </div>
+                <div class="col-lg-4">
+                    @{
+
+                        Html.DevExpress().Button(settings =>
+                        {
+                            settings.Name = "btnSearch";
+                            settings.Text = "Search";
+                            settings.UseSubmitBehavior = true;
+                        }).GetHtml();
+                    }
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+}
+
+
+<div class="row margin-top-10">
+    @foreach (var i in Model)
+    {
+
+        var res = i.Reservations.Any(m => m.ReservationDate == dt && m.isCancel == false);
+
+        <form action="@Url.Action("reserve")" method="post">
+            <input type="hidden" name="dateofReservation" value="@ViewBag.dateofReservation" />
+            <input type="hidden" name="seatId" value="@i.Id" />
+            <div class="col-lg-4 col-sm-12 col-md-4">
+                <div class="panel @ReservationHelper.GetReservationClass(res)">
+                    <div class="panel-heading">
+                        <h5>@i.TableName @(res?"not available":"available")</h5>
+                    </div>
+                    <div class="panel-body">
+                        <p>@i.Descriptions</p>
+                    </div>
+                    <div class="panel-footer">
+                        
+                        
+                        @if (res)
+                        {
+                            <button class="btn btn-danger" disabled>Reserve</button>
+                        }
+                        else
+                        {
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                <button class="btn btn-danger" >Reserve</button>
+                            }
+                            else
+                            {
+                                <a class="btn btn-danger" href="@Url.Action("login", "account", new {returnUrl = Url.Action("index")})">Reserve</a>
+                            }
+                        }
+                        
+
+
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
 </div>

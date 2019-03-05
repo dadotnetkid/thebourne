@@ -1,0 +1,30 @@
+﻿ <div class="navbar navbar-inverse navbar-fixed-top w3_navigation">
+    <div class="container">
+        <div class="navbar-header navbar-custom">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+            <a class="navbar-brand" href="@Url.Action("index","home")">THE <span>BOURNE PLACE</span><p class="logo_w3l_agile_caption">The Resto Bar you can call Home</p></a>
+        </div>
+        <div class="navbar-collapse collapse navbar-collapse-custom">
+            <ul class="nav navbar-nav">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li>@Html.ActionLink("My Reservations", "Index", "Reservations")</li>
+                    if (User.IsInRole("Staff"))
+                    {
+                        <li>@Html.ActionLink("Audit Trails", "Index", "AuditTrails")</li>
+                        <li>@Html.ActionLink("Customer Reservations", "CustomersReservation", "Reservations")</li>
+                        <li>@Html.ActionLink("Users", "index", "users")</li>
+                    }
+
+                }
+
+            </ul>
+            @Html.Partial("_LoginPartial")
+         </div>
+     </div>
+ </div>

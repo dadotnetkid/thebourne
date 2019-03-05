@@ -1,0 +1,84 @@
+﻿@using System.Web.UI.WebControls
+@using thebourne.Models
+@model thebourne.Models.AspNetUsers
+<div class="row">
+    <div class="col-lg-4">
+        @{
+            @Html.DevExpress().TextBoxFor(m => m.Email, settings =>
+            {
+                settings.Width = Unit.Percentage(100);
+                settings.Properties.Caption = "Email";
+                settings.Properties.CaptionSettings.Position = EditorCaptionPosition.Top;
+            }).GetHtml();
+        }
+    </div>
+    <div class="col-lg-4">
+        @{
+            @Html.DevExpress().TextBoxFor(m => m.Password, settings =>
+       {
+           settings.Width = Unit.Percentage(100);
+           settings.Properties.Caption = "Password";
+           settings.Properties.CaptionSettings.Position = EditorCaptionPosition.Top;
+           settings.Properties.Password = true;
+       }).Bind(Model?.Password ?? "123321").GetHtml();
+        }
+    </div>
+    <div class="col-lg-4">
+        @{
+            @Html.DevExpress().TextBoxFor(m => m.FirstName, settings =>
+            {
+                settings.Width = Unit.Percentage(100);
+                settings.Properties.Caption = "First Name";
+                settings.Properties.CaptionSettings.Position = EditorCaptionPosition.Top;
+            }).GetHtml();
+        }
+    </div>
+  
+
+</div>
+<div class="row margin-top-10">
+    <div class="col-lg-4">
+        @{
+            @Html.DevExpress().TextBoxFor(m => m.LastName, settings =>
+            {
+                settings.Width = Unit.Percentage(100);
+                settings.Properties.Caption = "Last Name";
+                settings.Properties.CaptionSettings.Position = EditorCaptionPosition.Top;
+            }).GetHtml();
+        }
+    </div>
+    <div class="col-lg-4">
+        @{
+            @Html.DevExpress().ComboBoxFor(m => m.UserRoles, settings =>
+            {
+                settings.Width = Unit.Percentage(100);
+                settings.Properties.Caption = "User Roles";
+                settings.Properties.CaptionSettings.Position = EditorCaptionPosition.Top;
+                settings.Properties.TextField = "Name";
+                settings.Properties.ValueField = "Name";
+            }).BindList(new TheBournEntity().AspNetRoles.ToList()).GetHtml()
+            ;
+        }
+    </div>
+</div> 
+
+<div class="row margin-top-10">
+  
+    <div class="col-lg-6">
+        @{
+            Html.DevExpress().Button(settings =>
+            {
+                settings.Name = "btnSubmit";
+                settings.Text = "Save";
+                settings.ClientSideEvents.Click = "function(s,e){UsersGridView.UpdateEdit()}";
+            }).GetHtml();
+            Html.DevExpress().Button(settings =>
+            {
+                settings.Name = "btnCancel";
+                settings.Text = "Cancel";
+                settings.ClientSideEvents.Click = "function(s,e){UsersGridView.CancelEdit()}";
+            }).GetHtml();
+        }
+    </div>
+
+</div>

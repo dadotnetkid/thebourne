@@ -1,0 +1,76 @@
+﻿@using Microsoft.AspNet.Identity
+@model IQueryable<thebourne.Models.Reservations>
+
+@{
+    ViewBag.Title = "My Reservations";
+}
+@if (ViewBag.ErrorPaypal!=null)
+{
+    <div class="alert alert-danger">
+        <span>@ViewBag.ErrorPaypal</span>
+    </div>
+}
+@if (ViewBag.SuccessPayment!=null)
+{
+    <div class="alert alert-success">
+        <span>@ViewBag.SuccessPayment</span>
+    </div>
+}
+@if (!Model.Any())
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <div class="alert alert-info"> You dont have any Reservation Yet</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    @foreach (var i in Model)
+    {
+
+        using (Html.BeginForm("CancelReservation", "reservations", routeValues: new { id = i.Id }))
+        {
+            <div class="col-lg-4">
+                <div class="panel @(i.isCancel ? "panel-danger": "panel-primary")">
+                    <div class="panel-heading"><h5>@i.Seats.TableName <b>@(i.isCancel ? "Cancelled" : i.isPaid==true ? "Paid":"")</b></h5> </div>
+                    <div class="panel-body">
+                        <p>@i.Seats.Descriptions</p>
+                    </div>
+                    <div class="panel-footer">
+                        <h5>Date of reservation: @i.ReservationDate.Value.ToShortDateString() </h5>
+                        @if (i.isCancel == false)
+                        {
+                            if (i.isPaid != true)
+                            {
+                                <button class="btn btn-danger">Cancel Reservation</button>
+
+                                <a onclick="" class="btn btn-primary" href="@Url.Action("paymentwithpaypal","paypal",new{reservationId=i.Id })">Pay online</a>
+                            }
+                            else
+                            {
+                                <button type="button" onclick="PrintReceipt(@i.Id)" class="btn btn-info">Print Receipt</button>
+                            }
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+        }
+
+    }
+</div>
+
+
+@Html.Action("reportViewer", "reports")
+<script>
+    function PrintReceipt(id) {
+        PopupControl.PerformCallback({ reservationId: id });
+    }
+</script>
